@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Bitcoin DCA Calculator</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💰</text></svg>">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="header">
+        <h1>💰 Bitcoin DCA Calculator</h1>
+        <button id="theme-toggle" class="theme-toggle">🌙</button>
+    </div>
+    
+    <p>Amount: <input type="number" id="amount" value="100"></p>
+    <p>Frequency: 
+        <select id="frequency">
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly" selected>Monthly</option>
+        </select>
+    </p>
+    <p>Start: <input type="date" id="start-date" value="2020-01-01"></p>
+    <p>End: <input type="date" id="end-date" value="2024-12-31"></p>
+    <p>
+        <button id="calculate-btn">Calculate</button>
+        <button id="clear-btn" style="margin-left: 10px;">Clear</button>
+    </p>
+    
+    <div id="results">
+        <h2>Results</h2>
+        <p>Total Invested: <span id="total-invested">$0</span></p>
+        <p>Bitcoin Acquired: <span id="bitcoin-acquired">0 BTC</span></p>
+        <p>Current Value: <span id="current-value">$0</span></p>
+        <p>Profit/Loss: <span id="profit-loss">$0</span></p>
+        <p>Average Price: <span id="average-price">$0</span></p>
+        <p>Purchases: <span id="purchase-count">0</span></p>
+    </div>
+
+    <div id="transactions">
+        <h2>Transactions</h2>
+        
+        <svg id="dca-chart" width="800" height="300" style="border: 1px solid black; display: none;">
+            <text x="10" y="20" font-family="monospace" font-size="14">DCA Progress</text>
+            <line x1="50" y1="50" x2="50" y2="250" stroke="black" stroke-width="1"/>
+            <line x1="50" y1="250" x2="750" y2="250" stroke="black" stroke-width="1"/>
+            <text x="10" y="260" font-family="monospace" font-size="10">0</text>
+            <text x="10" y="150" font-family="monospace" font-size="10">Mid</text>
+            <text x="10" y="60" font-family="monospace" font-size="10">Max</text>
+            <text x="50" y="270" font-family="monospace" font-size="10">Start</text>
+            <text x="700" y="270" font-family="monospace" font-size="10">End</text>
+        </svg>
+        
+        <table id="transactions-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>BTC Price</th>
+                    <th>BTC Bought</th>
+                    <th>Total BTC</th>
+                </tr>
+            </thead>
+            <tbody id="transactions-tbody">
+            </tbody>
+        </table>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

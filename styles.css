@@ -1,0 +1,101 @@
+body {
+    font-family: monospace;
+    margin: 20px;
+    background: white;
+    color: black;
+    word-wrap: break-word;
+}
+
+/* Header styling */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    margin: 0;
+}
+
+/* Theme toggle button - keeping brutalist style */
+.theme-toggle {
+    font-family: monospace;
+    border: 1px solid black;
+    padding: 5px 8px;
+    background: white;
+    color: black;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+input, select, button {
+    font-family: monospace;
+    border: 1px solid black;
+    padding: 2px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 5px;
+    text-align: left;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+svg {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid black;
+}
+
+#results {
+    display: none;
+}
+
+#transactions {
+    display: none;
+}
+
+/* Dark theme */
+body.dark-theme {
+    background: black;
+    color: white;
+}
+
+body.dark-theme .theme-toggle {
+    border: 1px solid white;
+    background: black;
+    color: white;
+}
+
+body.dark-theme input, 
+body.dark-theme select, 
+body.dark-theme button {
+    border: 1px solid white;
+    background: black;
+    color: white;
+}
+
+body.dark-theme th, 
+body.dark-theme td {
+    border: 1px solid white;
+}
+
+body.dark-theme svg {
+    border: 1px solid white;
+}
+
+body.dark-theme svg text {
+    fill: white;
+}
+
+body.dark-theme svg line {
+    stroke: white;
+}
