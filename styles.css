@@ -39,6 +39,18 @@ input, select, button {
     color: white;
 }
 
+/* Minimal date input fix for dark theme */
+input[type="date"] {
+    color-scheme: dark;
+}
+
+/* Date input fix for light theme */
+body.light-theme input[type="date"] {
+    color-scheme: light;
+}
+
+
+
 table {
     border-collapse: collapse;
     width: 100%;
@@ -300,3 +312,5 @@ svg line {
         font-size: 20px !important;
     }
 }
+
+

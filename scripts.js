@@ -320,7 +320,8 @@ function calculateDCA() {
             amount: amount,
             price: price,
             btcBought: btcBought,
-            totalBtc: totalBitcoin
+            totalBtc: totalBitcoin,
+            totalInvested: totalInvested
         });
         
         // Move to next purchase date
@@ -514,22 +515,37 @@ function drawChart(transactions) {
     const textColor = isLightTheme ? 'black' : 'white';
     const lineColor = isLightTheme ? 'black' : 'white';
     
-    // Calculate data for chart
+    // Get frequency from form to determine sampling strategy
+    const frequency = document.getElementById('frequency').value;
+    
+    // Apply frequency-specific sampling to get the correct number of points
+    const sampledTransactions = sampleTransactionsByFrequency(transactions, frequency);
+    
+    console.log(`Drawing chart: ${frequency} frequency with ${sampledTransactions.length} points from ${transactions.length} total transactions`);
+    
+    // Log expected vs actual points to verify correct frequency representation
+    const yearsDiff = (new Date(transactions[transactions.length - 1].date) - new Date(transactions[0].date)) / (1000 * 60 * 60 * 24 * 365.25);
+    const expectedPoints = {
+        'daily': Math.round(yearsDiff * 365),
+        'weekly': Math.round(yearsDiff * 52),
+        'monthly': Math.round(yearsDiff * 12)
+    };
+    console.log(`Expected ${expectedPoints[frequency]} points for ${frequency} over ${yearsDiff.toFixed(1)} years, using ${sampledTransactions.length} points`);
+    
+    // Calculate data for chart using sampled transactions
     const investedData = [];
     const valueData = [];
     
-    transactions.forEach((tx, index) => {
-        // Cumulative invested amount
-        const totalInvested = tx.amount * (index + 1);
+    sampledTransactions.forEach((tx, index) => {
+        // Use the actual cumulative invested amount from the transaction
         investedData.push({
             x: index,
-            y: totalInvested
+            y: tx.totalInvested
         });
         
-        // Current portfolio value at the end date using final BTC price
-        const finalDate = transactions[transactions.length - 1].date;
-        const finalPrice = getClosestPrice(finalDate);
-        const portfolioValue = tx.totalBtc * finalPrice;
+        // Current portfolio value using the actual BTC price at each transaction date
+        // This preserves the real volatility for each frequency
+        const portfolioValue = tx.totalBtc * tx.price;
         
         valueData.push({
             x: index,
@@ -549,7 +565,7 @@ function drawChart(transactions) {
     const chartY = 50;
     
     // Scale functions
-    const scaleX = (index) => chartX + (index / (transactions.length - 1)) * chartWidth;
+    const scaleX = (index) => chartX + (index / Math.max(sampledTransactions.length - 1, 1)) * chartWidth;
     const scaleY = (value) => chartY + chartHeight - (value / maxY) * chartHeight;
     
     // Create invested line points (straight line)
@@ -561,7 +577,7 @@ function drawChart(transactions) {
         investedPoints += `${x},${y}`;
     });
     
-    // Create value line points (shows portfolio growth)
+    // Create value line points (shows portfolio growth with real volatility)
     let valuePoints = '';
     valueData.forEach((point, index) => {
         const x = scaleX(point.x);
@@ -637,6 +653,57 @@ function drawChart(transactions) {
     svg.style.display = 'block';
 }
 
+// Function to sample transactions based on frequency to get the correct number of points
+function sampleTransactionsByFrequency(transactions, frequency) {
+    const totalTransactions = transactions.length;
+    
+    // Calculate the period in years
+    const startDate = new Date(transactions[0].date);
+    const endDate = new Date(transactions[transactions.length - 1].date);
+    const yearsDiff = (endDate - startDate) / (1000 * 60 * 60 * 24 * 365.25);
+    
+    // Expected number of points per year for each frequency
+    const expectedPointsPerYear = {
+        'daily': 365,
+        'weekly': 52, 
+        'monthly': 12
+    };
+    
+    const expectedTotalPoints = Math.round(yearsDiff * expectedPointsPerYear[frequency]);
+    
+    console.log(`Expected ${expectedTotalPoints} points for ${frequency} over ${yearsDiff.toFixed(1)} years`);
+    console.log(`Actual transactions: ${totalTransactions}`);
+    
+    // If we have fewer transactions than expected, use all of them
+    if (totalTransactions <= expectedTotalPoints * 1.2) { // 20% tolerance
+        console.log(`Using all ${totalTransactions} transactions (within expected range)`);
+        return transactions;
+    }
+    
+    // Sample transactions to match the expected frequency density
+    const samplingRatio = totalTransactions / expectedTotalPoints;
+    const sampled = [];
+    
+    // Always include the first transaction
+    sampled.push(transactions[0]);
+    
+    // Sample intermediate transactions
+    for (let i = 1; i < totalTransactions - 1; i++) {
+        if (i % Math.round(samplingRatio) === 0) {
+            sampled.push(transactions[i]);
+        }
+    }
+    
+    // Always include the last transaction
+    if (sampled[sampled.length - 1] !== transactions[totalTransactions - 1]) {
+        sampled.push(transactions[totalTransactions - 1]);
+    }
+    
+    console.log(`Sampled to ${sampled.length} points (ratio: 1:${Math.round(samplingRatio)})`);
+    
+    return sampled;
+}
+
 // Clear calculation and reset form
 function clearCalculation() {
     // Clear localStorage
@@ -670,9 +737,45 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Initialize theme toggle
     initializeThemeToggle();
     
-    // Load last calculation if exists
-    loadLastCalculation();
+    // Initialize date input functionality
+    initializeDateInputs();
 });
+
+// Function to ensure date inputs work correctly with custom styling
+function initializeDateInputs() {
+    const dateInputs = document.querySelectorAll('input[type="date"]');
+    
+    dateInputs.forEach(input => {
+        // Ensure the date picker opens when clicking anywhere on the input
+        input.addEventListener('click', function(e) {
+            // Force show the date picker
+            try {
+                this.showPicker && this.showPicker();
+            } catch (err) {
+                // Fallback for browsers without showPicker support
+                this.focus();
+            }
+        });
+        
+        // Also handle when clicking on the right side where the icon is
+        input.addEventListener('mousedown', function(e) {
+            const rect = this.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const inputWidth = rect.width;
+            
+            // If clicking in the last 30px (icon area), ensure picker opens
+            if (clickX > inputWidth - 30) {
+                setTimeout(() => {
+                    try {
+                        this.showPicker && this.showPicker();
+                    } catch (err) {
+                        this.focus();
+                    }
+                }, 0);
+            }
+        });
+    });
+}
 
 // Theme toggle functionality
 function initializeThemeToggle() {
