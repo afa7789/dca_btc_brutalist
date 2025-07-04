@@ -1,9 +1,11 @@
 body {
     font-family: monospace;
     margin: 20px;
-    background: white;
-    color: black;
+    background: black;
+    color: white;
     word-wrap: break-word;
+    max-width: 1200px;
+    margin: 20px auto;
 }
 
 /* Header styling */
@@ -21,28 +23,31 @@ body {
 /* Theme toggle button - keeping brutalist style */
 .theme-toggle {
     font-family: monospace;
-    border: 1px solid black;
+    border: 1px solid white;
     padding: 5px 8px;
-    background: white;
-    color: black;
+    background: black;
+    color: white;
     cursor: pointer;
     font-size: 16px;
 }
 
 input, select, button {
     font-family: monospace;
-    border: 1px solid black;
+    border: 1px solid white;
     padding: 2px;
+    background: black;
+    color: white;
 }
 
 table {
     border-collapse: collapse;
     width: 100%;
     table-layout: fixed;
+    max-width: 1000px;
 }
 
 th, td {
-    border: 1px solid black;
+    border: 1px solid white;
     padding: 5px;
     text-align: left;
     word-wrap: break-word;
@@ -52,7 +57,14 @@ th, td {
 svg {
     max-width: 100%;
     height: auto;
-    border: 1px solid black;
+    border: 1px solid white;
+    /* Responsividade do SVG */
+    width: 100%;
+    display: block;
+    /* Tamanho normal para desktop */
+    max-height: 300px;
+    /* Limite de largura */
+    max-width: 800px;
 }
 
 #results {
@@ -63,39 +75,228 @@ svg {
     display: none;
 }
 
-/* Dark theme */
-body.dark-theme {
-    background: black;
-    color: white;
+/* Light theme (alternativo) */
+body.light-theme {
+    background: white;
+    color: black;
 }
 
-body.dark-theme .theme-toggle {
-    border: 1px solid white;
-    background: black;
-    color: white;
+body.light-theme .theme-toggle {
+    border: 1px solid black;
+    background: white;
+    color: black;
 }
 
-body.dark-theme input, 
-body.dark-theme select, 
-body.dark-theme button {
-    border: 1px solid white;
-    background: black;
-    color: white;
+body.light-theme input, 
+body.light-theme select, 
+body.light-theme button {
+    border: 1px solid black;
+    background: white;
+    color: black;
 }
 
-body.dark-theme th, 
-body.dark-theme td {
-    border: 1px solid white;
+body.light-theme th, 
+body.light-theme td {
+    border: 1px solid black;
 }
 
-body.dark-theme svg {
-    border: 1px solid white;
+body.light-theme svg {
+    border: 1px solid black;
 }
 
-body.dark-theme svg text {
+body.light-theme svg text {
+    fill: black;
+}
+
+body.light-theme svg line {
+    stroke: black;
+}
+
+/* Textos do SVG - tamanhos normais para desktop */
+svg text {
+    font-size: 12px;
+    font-family: monospace;
     fill: white;
 }
 
-body.dark-theme svg line {
+/* Título do gráfico */
+svg text:first-child {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+svg line {
     stroke: white;
+}
+
+/* Tamanhos normais para desktop */
+@media (min-width: 601px) {
+    table {
+        font-size: 14px;
+    }
+    
+    th, td {
+        padding: 4px;
+        font-size: 13px;
+    }
+    
+    svg {
+        max-height: 300px;
+    }
+    
+    svg text {
+        font-size: 11px !important;
+    }
+    
+    svg text:first-child {
+        font-size: 15px !important;
+    }
+}
+
+/* Mobile responsivo - estilo vanilla e raiz */
+@media (max-width: 600px) {
+    body {
+        margin: 10px;
+        font-size: 14px;
+    }
+    
+    .header {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    
+    .header h1 {
+        font-size: 18px;
+    }
+    
+    /* Fazer tabela menor e mais legível no mobile */
+    table {
+        font-size: 12px;
+    }
+    
+    th, td {
+        padding: 3px 2px;
+        font-size: 11px;
+    }
+    
+    /* Quebrar texto longo nas células da tabela apenas */
+    th, td {
+        word-break: break-all;
+        hyphens: auto;
+    }
+    
+    /* Não quebrar texto nos resultados */
+    #results p {
+        word-break: normal;
+        overflow-wrap: break-word;
+        white-space: nowrap;
+        overflow: visible;
+    }
+    
+    /* Spans dos valores não devem ser cortados */
+    #results span {
+        display: inline-block;
+        word-break: keep-all;
+        white-space: nowrap;
+    }
+    
+    /* Diminuir colunas específicas */
+    th:nth-child(1), td:nth-child(1) { /* Date */
+        width: 20%;
+    }
+    
+    th:nth-child(2), td:nth-child(2) { /* Amount */
+        width: 15%;
+    }
+    
+    th:nth-child(3), td:nth-child(3) { /* BTC Price */
+        width: 20%;
+    }
+    
+    th:nth-child(4), td:nth-child(4) { /* BTC Bought */
+        width: 22%;
+    }
+    
+    th:nth-child(5), td:nth-child(5) { /* Total BTC */
+        width: 23%;
+    }
+    
+    /* Inputs e botões menores */
+    input, select, button {
+        font-size: 14px;
+        padding: 4px;
+    }
+    
+    /* Chart responsivo no mobile */
+    #dca-chart {
+        height: 200px;
+        min-height: 180px;
+    }
+    
+    /* Container do gráfico com scroll se necessário */
+    #transactions {
+        overflow-x: auto;
+    }
+    
+    /* Textos MAIORES no SVG para mobile - melhor legibilidade */
+    svg text {
+        font-size: 18px !important;
+    }
+    
+    svg text:first-child {
+        font-size: 22px !important;
+    }
+}
+
+/* Para telas muito pequenas */
+@media (max-width: 400px) {
+    body {
+        margin: 5px;
+        font-size: 13px;
+    }
+    
+    .header h1 {
+        font-size: 16px;
+    }
+    
+    table {
+        font-size: 10px;
+    }
+    
+    th, td {
+        padding: 2px 1px;
+        font-size: 9px;
+    }
+    
+    input, select, button {
+        font-size: 12px;
+    }
+    
+    #dca-chart {
+        height: 150px;
+        min-height: 120px;
+    }
+    
+    /* Garantir que resultados não sejam cortados em telas pequenas */
+    #results p {
+        word-break: normal;
+        white-space: nowrap;
+        overflow: visible;
+        font-size: 11px;
+    }
+    
+    #results span {
+        word-break: keep-all;
+        white-space: nowrap;
+    }
+    
+    /* Textos SVG grandes mesmo em telas muito pequenas */
+    svg text {
+        font-size: 16px !important;
+    }
+    
+    svg text:first-child {
+        font-size: 20px !important;
+    }
 }

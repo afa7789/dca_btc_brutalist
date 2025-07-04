@@ -510,9 +510,9 @@ function drawChart(transactions) {
     if (transactions.length === 0) return;
     
     // Get current theme colors - brutalist approach
-    const isDarkTheme = document.body.classList.contains('dark-theme');
-    const textColor = isDarkTheme ? 'white' : 'black';
-    const lineColor = isDarkTheme ? 'white' : 'black';
+    const isLightTheme = document.body.classList.contains('light-theme');
+    const textColor = isLightTheme ? 'black' : 'white';
+    const lineColor = isLightTheme ? 'black' : 'white';
     
     // Calculate data for chart
     const investedData = [];
@@ -591,7 +591,7 @@ function drawChart(transactions) {
     
     // Add legend
     const legendInvested = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    legendInvested.setAttribute('x', '350');
+    legendInvested.setAttribute('x', '280');
     legendInvested.setAttribute('y', '30');
     legendInvested.setAttribute('font-family', 'monospace');
     legendInvested.setAttribute('font-size', '12');
@@ -601,8 +601,8 @@ function drawChart(transactions) {
     svg.appendChild(legendInvested);
     
     const legendValue = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    legendValue.setAttribute('x', '550');
-    legendValue.setAttribute('y', '30');
+    legendValue.setAttribute('x', '280');
+    legendValue.setAttribute('y', '50');
     legendValue.setAttribute('font-family', 'monospace');
     legendValue.setAttribute('font-size', '12');
     legendValue.setAttribute('fill', textColor);
@@ -682,23 +682,32 @@ function initializeThemeToggle() {
     // Check for saved theme preference or default to dark mode
     const savedTheme = localStorage.getItem('theme') || 'dark';
     
-    if (savedTheme === 'dark') {
-        body.classList.add('dark-theme');
-        themeToggle.textContent = '☀️';
-    } else {
+    if (savedTheme === 'light') {
+        body.classList.add('light-theme');
         themeToggle.textContent = '🌙';
+    } else {
+        themeToggle.textContent = '☀️';
     }
     
     // Theme toggle event listener
     themeToggle.addEventListener('click', function() {
-        body.classList.toggle('dark-theme');
+        body.classList.toggle('light-theme');
         
-        if (body.classList.contains('dark-theme')) {
-            themeToggle.textContent = '☀️';
-            localStorage.setItem('theme', 'dark');
-        } else {
+        if (body.classList.contains('light-theme')) {
             themeToggle.textContent = '🌙';
             localStorage.setItem('theme', 'light');
+        } else {
+            themeToggle.textContent = '☀️';
+            localStorage.setItem('theme', 'dark');
+        }
+        
+        // Redesenhar o gráfico com as cores corretas do tema
+        const savedData = localStorage.getItem('lastDCACalculation');
+        if (savedData) {
+            const calculationData = JSON.parse(savedData);
+            if (calculationData.transactions && calculationData.transactions.length > 0) {
+                drawChart(calculationData.transactions);
+            }
         }
     });
 }

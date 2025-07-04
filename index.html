@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bitcoin DCA Calculator</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💰</text></svg>">
     <link rel="stylesheet" href="styles.css">
@@ -9,7 +10,7 @@
 <body>
     <div class="header">
         <h1>💰 Bitcoin DCA Calculator</h1>
-        <button id="theme-toggle" class="theme-toggle">☀️</button>
+        <button id="theme-toggle" class="theme-toggle">🌙</button>
     </div>
     
     <p>Amount: <input type="number" id="amount" value="100"></p>
@@ -40,15 +41,15 @@
     <div id="transactions">
         <h2>Transactions</h2>
         
-        <svg id="dca-chart" width="800" height="300" style="border: 1px solid black; display: none;">
-            <text x="10" y="20" font-family="monospace" font-size="14">DCA Progress</text>
-            <line x1="50" y1="50" x2="50" y2="250" stroke="black" stroke-width="1"/>
-            <line x1="50" y1="250" x2="750" y2="250" stroke="black" stroke-width="1"/>
-            <text x="10" y="260" font-family="monospace" font-size="10">0</text>
-            <text x="10" y="150" font-family="monospace" font-size="10">Mid</text>
-            <text x="10" y="60" font-family="monospace" font-size="10">Max</text>
-            <text x="50" y="270" font-family="monospace" font-size="10">Start</text>
-            <text x="700" y="270" font-family="monospace" font-size="10">End</text>
+        <svg id="dca-chart" width="800" height="300" viewBox="0 0 800 300" preserveAspectRatio="xMidYMid meet" style="border: 1px solid white; display: none;">
+            <text x="10" y="25" font-family="monospace" font-size="15" fill="white">DCA Progress</text>
+            <line x1="50" y1="50" x2="50" y2="250" stroke="white" stroke-width="1"/>
+            <line x1="50" y1="250" x2="750" y2="250" stroke="white" stroke-width="1"/>
+            <text x="10" y="265" font-family="monospace" font-size="11" fill="white">0</text>
+            <text x="10" y="155" font-family="monospace" font-size="11" fill="white">Mid</text>
+            <text x="10" y="65" font-family="monospace" font-size="11" fill="white">Max</text>
+            <text x="50" y="280" font-family="monospace" font-size="11" fill="white">Start</text>
+            <text x="690" y="280" font-family="monospace" font-size="11" fill="white">End</text>
         </svg>
         
         <table id="transactions-table">
